@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="swag_shipping_restriction.subscriber.template_subscriber" class="SwagShippingRestriction\Subscriber\TemplateSubscriber">
+            <argument>%swag_shipping_restriction.plugin_dir%/Resources/views</argument>
+            <tag name="shopware.event_subscriber"/>
+        </service>
+
+        <service id="swag_shipping_restriction.subscriber.register" class="SwagShippingRestriction\Subscriber\RegisterSubscriber">
+            <argument type="service" id="swag_shipping_restriction.services.country_not_available"/>
+            <tag name="shopware.event_subscriber"/>
+        </service>
+
+        <service id="swag_shipping_restriction.subscriber.checkout" class="SwagShippingRestriction\Subscriber\CheckoutSubscriber">
+            <argument type="service" id="swag_shipping_restriction.services.country_not_available"/>
+            <argument type="service" id="dbal_connection"/>
+            <argument type="service" id="shopware_storefront.context_service"/>
+            <tag name="shopware.event_subscriber"/>
+        </service>
+
+        <service id="swag_shipping_restriction.subscriber.address" class="SwagShippingRestriction\Subscriber\AddressSubscriber">
+            <argument type="service" id="swag_shipping_restriction.services.country_not_available"/>
+            <argument type="service" id="shopware_storefront.context_service"/>
+            <tag name="shopware.event_subscriber"/>
+        </service>
+
+        <service id="swag_shipping_restriction.services.country_not_available" class="SwagShippingRestriction\Services\CountryNotAvailableService">
+            <argument type="service" id="shopware_storefront.country_gateway"/>
+            <argument type="service" id="cache"/>
+            <argument type="service" id="dbal_connection"/>
+        </service>
+    </services>
+</container>
