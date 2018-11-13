@@ -7,11 +7,13 @@
     <services>
         <service id="swag_shipping_restriction.subscriber.template_subscriber" class="SwagShippingRestriction\Subscriber\TemplateSubscriber">
             <argument>%swag_shipping_restriction.plugin_dir%/Resources/views</argument>
+            <argument type="service" id="swag_shipping_restriction.config.shopware_version"/>
             <tag name="shopware.event_subscriber"/>
         </service>
 
         <service id="swag_shipping_restriction.subscriber.register" class="SwagShippingRestriction\Subscriber\RegisterSubscriber">
             <argument type="service" id="swag_shipping_restriction.services.country_not_available"/>
+            <argument type="service" id="swag_shipping_restriction.config.shopware_version"/>
             <tag name="shopware.event_subscriber"/>
         </service>
 
@@ -19,12 +21,14 @@
             <argument type="service" id="swag_shipping_restriction.services.country_not_available"/>
             <argument type="service" id="dbal_connection"/>
             <argument type="service" id="shopware_storefront.context_service"/>
+            <argument type="service" id="swag_shipping_restriction.config.shopware_version"/>
             <tag name="shopware.event_subscriber"/>
         </service>
 
         <service id="swag_shipping_restriction.subscriber.address" class="SwagShippingRestriction\Subscriber\AddressSubscriber">
             <argument type="service" id="swag_shipping_restriction.services.country_not_available"/>
             <argument type="service" id="shopware_storefront.context_service"/>
+            <argument type="service" id="swag_shipping_restriction.config.shopware_version"/>
             <tag name="shopware.event_subscriber"/>
         </service>
 
@@ -32,6 +36,11 @@
             <argument type="service" id="shopware_storefront.country_gateway"/>
             <argument type="service" id="cache"/>
             <argument type="service" id="dbal_connection"/>
+        </service>
+
+        <service id="swag_shipping_restriction.config.shopware_version" class="Shopware_Components_Config">
+            <factory service="config" method="get"/>
+            <argument>version</argument>
         </service>
     </services>
 </container>

@@ -7,10 +7,6 @@ use Shopware\Bundle\StoreFrontBundle\Gateway\CountryGatewayInterface;
 use Shopware\Bundle\StoreFrontBundle\Struct\Country;
 use Shopware\Bundle\StoreFrontBundle\Struct\ShopContextInterface;
 
-/**
- * Class CountryNotAvailableService
- * @package SwagShippingRestriction\Subscriber
- */
 class CountryNotAvailableService
 {
     /**

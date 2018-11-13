@@ -6,6 +6,7 @@ use Enlight\Event\SubscriberInterface;
 use Enlight_Event_EventArgs;
 use Shopware\Models\Customer\Customer;
 use SwagShippingRestriction\Services\CountryNotAvailableService;
+use SwagShippingRestriction\Services\VersionCheck;
 
 class RegisterSubscriber implements SubscriberInterface
 {
@@ -13,6 +14,11 @@ class RegisterSubscriber implements SubscriberInterface
      * @var CountryNotAvailableService
      */
     private $availableService;
+
+    /**
+     * @var string
+     */
+    private $version;
 
     /**
      * @return array
@@ -26,10 +32,12 @@ class RegisterSubscriber implements SubscriberInterface
 
     /**
      * @param CountryNotAvailableService $availableService
+     * @param string $version
      */
-    public function __construct(CountryNotAvailableService $availableService)
+    public function __construct(CountryNotAvailableService $availableService, $version)
     {
         $this->availableService = $availableService;
+        $this->version = $version;
     }
 
     /**
@@ -41,6 +49,10 @@ class RegisterSubscriber implements SubscriberInterface
         $controller = $args->get('subject');
         $request = $controller->Request();
         $view = $controller->View();
+
+        if (!VersionCheck::isActive($this->version)) {
+            return;
+        }
 
         $data = $this->getPostData($request);
 
