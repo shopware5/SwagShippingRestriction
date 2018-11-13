@@ -9,6 +9,7 @@ use Enlight_Hook_HookArgs;
 use Shopware\Bundle\StoreFrontBundle\Service\ContextServiceInterface;
 use Shopware\Models\Customer\Customer;
 use SwagShippingRestriction\Services\CountryNotAvailableService;
+use SwagShippingRestriction\Services\VersionCheck;
 
 class CheckoutSubscriber implements SubscriberInterface
 {
@@ -28,6 +29,11 @@ class CheckoutSubscriber implements SubscriberInterface
     private $contextService;
 
     /**
+     * @var string
+     */
+    private $version;
+
+    /**
      * @return array
      */
     public static function getSubscribedEvents()
@@ -39,14 +45,22 @@ class CheckoutSubscriber implements SubscriberInterface
         ];
     }
 
+    /**
+     * @param CountryNotAvailableService $availableService
+     * @param Connection $connection
+     * @param ContextServiceInterface $contextService
+     * @param string $version
+     */
     public function __construct(
         CountryNotAvailableService $availableService,
         Connection $connection,
-        ContextServiceInterface $contextService
+        ContextServiceInterface $contextService,
+        $version
     ) {
         $this->availableService = $availableService;
         $this->connection = $connection;
         $this->contextService = $contextService;
+        $this->version = $version;
     }
 
     /**
@@ -58,6 +72,10 @@ class CheckoutSubscriber implements SubscriberInterface
         $controller = $args->get('subject');
         $request = $controller->Request();
         $view = $controller->View();
+
+        if (!VersionCheck::isActive($this->version)) {
+            return;
+        }
 
         if ($request->getActionName() !== 'confirm') {
             return;
@@ -87,6 +105,10 @@ class CheckoutSubscriber implements SubscriberInterface
 
         $session = $controller->get('session');
         $userData = $controller->get('modules')->Admin()->sGetUserData();
+
+        if (!VersionCheck::isActive($this->version)) {
+            return;
+        }
 
         if (
             (int) $userData['additional']['user']['accountmode'] === Customer::ACCOUNT_MODE_FAST_LOGIN &&
@@ -118,6 +140,10 @@ class CheckoutSubscriber implements SubscriberInterface
     {
         /** @var \Shopware_Controllers_Frontend_Checkout $subject */
         $subject = $args->getSubject();
+
+        if (!VersionCheck::isActive($this->version)) {
+            return;
+        }
 
         $accountMode = (int) $subject->View()->sUserData['additional']['user']['accountmode'];
 

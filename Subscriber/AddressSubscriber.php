@@ -6,6 +6,7 @@ namespace SwagShippingRestriction\Subscriber;
 use Enlight\Event\SubscriberInterface;
 use Shopware\Bundle\StoreFrontBundle\Service\ContextServiceInterface;
 use SwagShippingRestriction\Services\CountryNotAvailableService;
+use SwagShippingRestriction\Services\VersionCheck;
 
 class AddressSubscriber implements SubscriberInterface
 {
@@ -19,6 +20,11 @@ class AddressSubscriber implements SubscriberInterface
     private $contextService;
 
     /**
+     * @var string
+     */
+    private $version;
+
+    /**
      * @return array
      */
     public static function getSubscribedEvents()
@@ -28,10 +34,16 @@ class AddressSubscriber implements SubscriberInterface
         ];
     }
 
-    public function __construct(CountryNotAvailableService $service, ContextServiceInterface $contextService)
+    /**
+     * @param CountryNotAvailableService $service
+     * @param ContextServiceInterface $contextService
+     * @param string $version
+     */
+    public function __construct(CountryNotAvailableService $service, ContextServiceInterface $contextService, $version)
     {
         $this->service = $service;
         $this->contextService = $contextService;
+        $this->version = $version;
     }
 
     /**
@@ -42,6 +54,10 @@ class AddressSubscriber implements SubscriberInterface
         /** @var \Enlight_Controller_Action $controller */
         $controller = $args->get('subject');
         $view = $controller->View();
+
+        if (!VersionCheck::isActive($this->version)) {
+            return;
+        }
 
         $countries = $this->service->getNotAvailableCountries($this->contextService->getContext());
         sort($countries);

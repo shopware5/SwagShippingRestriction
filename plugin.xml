@@ -2,7 +2,8 @@
 <plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.5/engine/Shopware/Components/Plugin/schema/plugin.xsd">
 
-    <label>Swag Shipping Restriction</label>
+    <label lang="en">Shipping Restriction</label>
+    <label lang="de">Lieferland Begrenzung</label>
     <version>1.0.0</version>
     <copyright>(c) by shopware AG</copyright>
     <license>MIT</license>

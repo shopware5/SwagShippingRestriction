@@ -4,6 +4,7 @@ namespace SwagShippingRestriction\Subscriber;
 
 use Enlight\Event\SubscriberInterface;
 use Enlight_Event_EventArgs;
+use SwagShippingRestriction\Services\VersionCheck;
 
 class TemplateSubscriber implements SubscriberInterface
 {
@@ -12,9 +13,19 @@ class TemplateSubscriber implements SubscriberInterface
      */
     private $viewDir;
 
-    public function __construct($viewDir)
+    /**
+     * @var string
+     */
+    private $version;
+
+    /**
+     * @param string $viewDir
+     * @param string $version
+     */
+    public function __construct($viewDir, $version)
     {
         $this->viewDir = $viewDir;
+        $this->version = $version;
     }
 
     /**
@@ -33,6 +44,10 @@ class TemplateSubscriber implements SubscriberInterface
      */
     public function addTemplateDir(Enlight_Event_EventArgs $args)
     {
+        if (!VersionCheck::isActive($this->version)) {
+            return;
+        }
+
         $args->get('subject')->View()->addTemplateDir($this->viewDir);
     }
 }
