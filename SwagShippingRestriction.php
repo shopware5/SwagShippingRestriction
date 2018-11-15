@@ -33,6 +33,10 @@ class SwagShippingRestriction extends Plugin
         $this->container->get('dbal_connection')->executeQuery('ALTER TABLE `s_core_countries_attributes` CHANGE `swag_allow_shipping` `swag_allow_shipping` int(1) NULL DEFAULT \'1\' AFTER `countryID`;');
         $this->container->get('dbal_connection')->executeQuery('UPDATE `s_core_countries_attributes` SET swag_allow_shipping = 1 WHERE swag_allow_shipping IS NULL');
 
+        try {
+            $this->container->get('dbal_connection')->executeQuery('INSERT INTO s_core_countries_attributes (countryId) (SELECT s_core_countries.id FROM s_core_countries LEFT JOIN s_core_countries_attributes ON s_core_countries_attributes.countryId = s_core_countries.id WHERE s_core_countries_attributes.id IS NULL)');
+        } catch (\Exception $e) {}
+
         $context->scheduleClearCache(UninstallContext::CACHE_LIST_ALL);
     }
 
