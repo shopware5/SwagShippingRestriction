@@ -52,6 +52,8 @@ class CountryNotAvailableService
 
         $allowed = $this->isAllowedCountry($country);
 
+        $this->cache->save($allowed, $key, ['Shopware_Config'], 86400);
+
         return $allowed;
     }
 
