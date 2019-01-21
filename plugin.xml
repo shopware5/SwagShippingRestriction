@@ -4,12 +4,17 @@
 
     <label lang="en">Shipping Restriction</label>
     <label lang="de">Lieferland Begrenzung</label>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <copyright>(c) by shopware AG</copyright>
     <license>MIT</license>
     <link>http://store.shopware.com</link>
     <author>shopware AG</author>
     <compatibility minVersion="5.2.0" maxVersion="5.5.2"/>
+
+    <changelog version="1.0.1">
+        <changes lang="de">Neuen Smarty-Block hinzugefügt</changes>
+        <changes lang="en">Added new Smarty block</changes>
+    </changelog>
 
     <changelog version="1.0.0">
         <changes lang="de">SW-22881 - Erstveröffentlichung</changes>
